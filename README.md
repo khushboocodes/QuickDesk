@@ -60,3 +60,59 @@ QuickDesk is a modern, AI-assisted helpdesk ticketing platform designed to strea
 - Animated feedback for key interactions (status updates, suggestions).
 - Compact stats overview plus recent activity feed.
 - Personalized touches: greeting, assigned agent avatar, quick action shortcuts.
+
+---
+
+### Tech Stack
+| Layer         | Technology              | Description                               |
+|--------------|--------------------------|-------------------------------------------|
+| Frontend     | React.js, Tailwind CSS   | UI library and styling                    |
+| UI Components| shadcn/ui, Lucide-react  | Accessible components and icons           |
+| Forms & Date | React Hook Form, date-fns| Form handling and date formatting         |
+| AI Features  | InvokeLLM / OpenAI API   | Smart suggestions for tickets             |
+| Backend      | Node.js + Express        | REST API and business logic               |
+| Database     |  PostgreSQL              | Ticket, user, and comment storage         |
+| File Upload  | Cloudinary / AWS S3      | Attachment handling                       |
+| Auth | JWT / Firebase Auth     | User authentication & session management |
+
+---
+
+## 📦 Getting Started
+
+### Prerequisites
+- Node.js (>=16)
+- npm or yarn
+
+### Installation
+
+bash
+# clone repo
+git clone <your-repo-url>
+cd quickdesk
+
+# install dependencies
+npm install
+
+# if backend is separate, navigate to backend folder and install too
+cd backend
+npm install
+
+---
+
+🧪 API Endpoints (reference)
+Authentication
+GET /api/me → current user info
+POST /api/login → login user
+POST /api/register → create user
+
+---
+
+## 🔧 Scripts
+bash
+Copy
+Edit
+# start backend
+node backend/server.js
+
+# start frontend (if using Vite/React)
+npm run dev
