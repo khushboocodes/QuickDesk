@@ -97,42 +97,46 @@ Team Member 3
 
 ---
 
-## 📦 Getting Started
+📦 Getting Started
 
-### Prerequisites
-- Node.js (>=16)
-- npm or yarn
+Prerequisites
+Node.js (v16 or higher)
 
-### Installation
+npm or yarn
 
-bash
-# clone repo
+Installation
+📦 Getting Started
+
+Prerequisites
+Node.js (v16 or higher)
+
+npm or yarn
+
+Installation
+# Clone the repository
 git clone <your-repo-url>
 cd quickdesk
 
-# install dependencies
+# Install frontend dependencies
 npm install
 
-# if backend is separate, navigate to backend folder and install too
+# If backend is in a separate folder
 cd backend
 npm install
 
----
+🧪 API Endpoints (Reference)
+🚪 Authentication
 
-🧪 API Endpoints (reference)
-Authentication
-GET /api/me → current user info
-POST /api/login → login user
-POST /api/register → create user
+Method	Endpoint	Description
+GET	/api/me	Get current user info
+POST	/api/login	Login user
+POST	/api/register	Register new user
 
----
+🔧 Scripts
+# Start backend server
+cd backend
+node server.js
 
-## 🔧 Scripts
-bash
-Copy
-Edit
-# start backend
-node backend/server.js
-
-# start frontend (if using Vite/React)
+# Start frontend (React + Vite)
+cd ../
 npm run dev
