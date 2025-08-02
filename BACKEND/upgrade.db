@@ -1,0 +1,46 @@
+{
+  "name": "UpgradeRequest",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user requesting an upgrade"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Name of the user requesting an upgrade"
+    },
+    "current_role": {
+      "type": "string",
+      "description": "The user's current role"
+    },
+    "requested_role": {
+      "type": "string",
+      "enum": [
+        "support_agent",
+        "admin"
+      ],
+      "description": "The role the user is requesting"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Reason for the upgrade request"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Status of the upgrade request"
+    }
+  },
+  "required": [
+    "user_email",
+    "user_name",
+    "current_role",
+    "requested_role"
+  ]
+}

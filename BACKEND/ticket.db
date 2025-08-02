@@ -1,0 +1,104 @@
+{
+  "name": "Ticket",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Ticket title/subject"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the issue"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "in_progress",
+        "resolved",
+        "closed"
+      ],
+      "default": "open",
+      "description": "Current ticket status"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium",
+      "description": "Ticket priority level"
+    },
+    "category_id": {
+      "type": "string",
+      "description": "Reference to category"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Email of assigned support agent"
+    },
+    "reporter_email": {
+      "type": "string",
+      "description": "Email of person who created the ticket"
+    },
+    "attachment_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs of attached files"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for organization"
+    },
+    "upvotes": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of upvotes"
+    },
+    "downvotes": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of downvotes"
+    },
+    "voted_by": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "user_email": {
+            "type": "string"
+          },
+          "vote_type": {
+            "type": "string",
+            "enum": [
+              "up",
+              "down"
+            ]
+          }
+        }
+      },
+      "description": "Users who voted on this ticket"
+    },
+    "resolved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When ticket was resolved"
+    },
+    "resolution_time_hours": {
+      "type": "number",
+      "description": "Time taken to resolve in hours"
+    }
+  },
+  "required": [
+    "title",
+    "description"
+  ]
+}
