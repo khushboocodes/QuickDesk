@@ -10,7 +10,7 @@ QuickDesk is a modern, AI-assisted helpdesk ticketing platform designed to strea
 ---
 
 
-## Team Deatils
+## Team Details
 
 -Team Leader Name : Khushboo Khator
 -Email: khushboocodes@gmail.com
