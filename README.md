@@ -45,3 +45,27 @@ QuickDesk is a modern, AI-assisted helpdesk ticketing platform designed to strea
 - **Quick templates / smart tags** to accelerate common ticket creation.
 
 ---
+
+🧠 UX Flow Summary
+User logs in (end user or agent).
+
+End user creates a ticket; smart suggestions prefill category/priority/tags.
+
+Similar resolved tickets are surfaced to avoid duplicates.
+
+Submitted tickets appear in dashboards; other users can upvote.
+
+Support agents view tickets in list/kanban, change status, and comment.
+
+Users get visual feedback via status badges, timeline, and estimated resolution time.
+
+🎨 UI/Design Highlights
+Gradient backgrounds for header and call-to-action areas.
+
+Status & priority clearly distinguishable via color-coded badges.
+
+Animated feedback for key interactions (status updates, suggestions).
+
+Compact stats overview plus recent activity feed.
+
+Personalized touches: greeting, assigned agent avatar, quick action shortcuts.
