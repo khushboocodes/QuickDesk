@@ -1,0 +1,248 @@
+
+import React, { useState, useEffect } from "react";
+import { Ticket } from "@/entities/Ticket";
+import { Comment } from "@/entities/Comment";
+import { User } from "@/entities/User";
+import { Category } from "@/entities/Category";
+import { 
+  TrendingUp, 
+  Clock, 
+  CheckCircle, 
+  AlertCircle,
+  BarChart3,
+  Users,
+  MessageSquare,
+  ArrowUp,
+  Ticket as TicketIcon // Added TicketIcon import
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { format } from "date-fns";
+import { motion } from "framer-motion";
+
+import StatsCards from "../components/dashboard/StatsCards";
+import RecentTickets from "../components/dashboard/RecentTickets";
+import ActivityChart from "../components/dashboard/ActivityChart";
+import TopCategories from "../components/dashboard/TopCategories";
+// Removed: import Hero3D from "../components/dashboard/Hero3D";
+
+export default function Dashboard() {
+  const [tickets, setTickets] = useState([]);
+  const [user, setUser] = useState(null);
+  const [stats, setStats] = useState({
+    total: 0,
+    open: 0,
+    inProgress: 0,
+    resolved: 0,
+    myTickets: 0
+  });
+  const [adminStats, setAdminStats] = useState({
+    totalUsers: 0,
+    totalTickets: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    setIsLoading(true);
+    try {
+      const userData = await User.me();
+      
+      const [allTickets, allUsers] = await Promise.all([
+        Ticket.list('-created_date', 100),
+        userData.role === 'admin' ? User.list() : Promise.resolve([])
+      ]);
+      
+      setUser(userData);
+      
+      // Filter tickets based on user role
+      let userTickets = allTickets;
+      if (userData.role === 'end_user') {
+        userTickets = allTickets.filter(t => t.reporter_email === userData.email);
+      }
+      
+      setTickets(userTickets);
+      
+      // Calculate stats
+      const totalTickets = userTickets.length;
+      const openTickets = userTickets.filter(t => t.status === 'open').length;
+      const inProgressTickets = userTickets.filter(t => t.status === 'in_progress').length;
+      const resolvedTickets = userTickets.filter(t => t.status === 'resolved' || t.status === 'closed').length;
+      const myTickets = userData.role === 'end_user' ? totalTickets : 
+                       allTickets.filter(t => t.assigned_to === userData.email).length;
+      
+      setStats({
+        total: totalTickets,
+        open: openTickets,
+        inProgress: inProgressTickets,
+        resolved: resolvedTickets,
+        myTickets
+      });
+
+      // Calculate admin stats
+      if (userData.role === 'admin') {
+        setAdminStats({
+          totalUsers: allUsers.length,
+          totalTickets: allTickets.length,
+        });
+      }
+
+    } catch (error) {
+      console.error("Error loading dashboard data:", error);
+    }
+    setIsLoading(false);
+  };
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
+  };
+
+  const getRecentActivity = () => {
+    return tickets
+      .slice(0, 5)
+      .map(ticket => ({
+        id: ticket.id,
+        title: ticket.title,
+        status: ticket.status,
+        created_date: ticket.created_date,
+        type: 'ticket_created'
+      }));
+  };
+
+  return (
+    <div className="p-6 space-y-8 bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+            <div className="space-y-2">
+              <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
+                {getGreeting()}, {user?.full_name || 'User'}!
+              </h1>
+              <p className="text-slate-600 text-lg">
+                {user?.role === 'end_user' ? 'Track your support requests' : 
+                 user?.role === 'support_agent' ? 'Manage support tickets' : 
+                 'Monitor system performance'}
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Link to={createPageUrl("CreateTicket")}>
+                <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+                  Create New Ticket
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <StatsCards
+            title={user?.role === 'end_user' ? 'Your Tickets' : (user?.role === 'admin' ? 'Total Tickets' : 'Assigned Tickets')}
+            value={user?.role === 'admin' ? adminStats.totalTickets : (user?.role === 'end_user' ? stats.total : stats.myTickets)}
+            icon={BarChart3}
+            gradient="from-blue-500 to-cyan-500"
+            trend={`+${Math.floor(Math.random() * 20)}% this week`}
+          />
+          <StatsCards
+            title="Open Tickets"
+            value={stats.open}
+            icon={AlertCircle}
+            gradient="from-orange-500 to-red-500"
+            trend={stats.open > 0 ? 'Needs attention' : 'All caught up!'}
+          />
+          <StatsCards
+            title="In Progress"
+            value={stats.inProgress}
+            icon={Clock}
+            gradient="from-yellow-500 to-orange-500"
+            trend="Being worked on"
+          />
+          <StatsCards
+            title="Resolved"
+            value={stats.resolved}
+            icon={CheckCircle}
+            gradient="from-emerald-500 to-green-500"
+            trend="Great progress!"
+          />
+          {user?.role === 'admin' && (
+            <StatsCards
+              title="Total Users"
+              value={adminStats.totalUsers}
+              icon={Users}
+              gradient="from-purple-500 to-indigo-500"
+              trend="System-wide"
+            />
+          )}
+        </div>
+        
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Left Column */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="relative bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl shadow-2xl p-6 lg:p-8 h-auto lg:h-80 overflow-hidden flex items-center">
+                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                <div className="relative z-10">
+                    <h2 className="text-3xl font-bold text-white">Welcome to QuickDesk</h2>
+                    <p className="text-slate-300 mt-2 max-w-lg">Your intelligent help desk solution. Here's a summary of what's happening.</p>
+                    <Link to={createPageUrl("Tickets")} className="mt-6 inline-block">
+                       <Button variant="secondary" className="backdrop-blur-sm bg-white/10 hover:bg-white/20 text-white">View My Tickets</Button>
+                    </Link>
+                </div>
+                <div className="absolute -right-10 -bottom-10 opacity-20 hidden lg:block">
+                    <TicketIcon className="w-48 h-48 text-emerald-400 transform rotate-12" />
+                </div>
+            </div>
+
+            <RecentTickets 
+              tickets={tickets.slice(0, 8)}
+              isLoading={isLoading}
+              userRole={user?.role}
+            />
+            
+            {(user?.role === 'support_agent' || user?.role === 'admin') && (
+              <ActivityChart tickets={tickets} />
+            )}
+          </div>
+
+          {/* Right Column - Sidebar */}
+          <div className="space-y-6">
+            <TopCategories tickets={tickets} isLoading={isLoading} />
+            
+            {/* Quick Actions */}
+            <Card className="bg-gradient-to-br from-white to-slate-50 border-slate-200/60 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-lg font-bold text-slate-900">Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Link to={createPageUrl("CreateTicket")} className="block">
+                  <Button variant="outline" className="w-full justify-start hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700 transition-colors">
+                    <AlertCircle className="w-4 h-4 mr-2" />
+                    Report New Issue
+                  </Button>
+                </Link>
+                <Link to={createPageUrl("Tickets")} className="block">
+                  <Button variant="outline" className="w-full justify-start hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-colors">
+                    <BarChart3 className="w-4 h-4 mr-2" />
+                    View All Tickets
+                  </Button>
+                </Link>
+                {(user?.role === 'support_agent' || user?.role === 'admin') && (
+                  <Link to={createPageUrl("AllTickets")} className="block">
+                    <Button variant="outline" className="w-full justify-start hover:bg-purple-50 hover:border-purple-200 hover:text-purple-700 transition-colors">
+                      <Users className="w-4 h-4 mr-2" />
+                      Agent Dashboard
+                    </Button>
