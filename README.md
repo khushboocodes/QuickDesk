@@ -10,6 +10,26 @@ QuickDesk is a modern, AI-assisted helpdesk ticketing platform designed to strea
 ---
 
 
+## Team Deatils
+
+-Team Leader Name : Khushboo Khator
+-Email: khushboocodes@gmail.com
+
+
+-Team Member 1
+-Name: Anuj Sharma
+-Email: anujsharrmmaa@gamil.com
+
+-Team Member 2
+-Name: Rohit Prajapati
+-Email: rrohit9111@gmail.com
+
+Team Member 3
+-Name: tanushka tomar
+-Email: tanushkat2005@gmail.com
+
+
+
 ## 🎯 Key Goals
 - Fast creation and tracking of support tickets.
 - Crowd-prioritization via upvotes to surface common issues.
