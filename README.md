@@ -1,6 +1,9 @@
 # QuickDesk
 
-**QuickDesk** is a modern, AI-assisted helpdesk ticketing platform designed to streamline support workflows for users, agents, and admins. It provides an intuitive user interface for submitting issues, intelligent suggestions to assist in ticket creation, and role-based dashboards to manage, resolve, and monitor tickets efficiently.
+**QuickDesk** is an intelligent, lightweight help-desk ticketing system built for rapid support resolution. It supports role-based access (end user, support agent, admin), smart suggestions, upvoting, and visual status tracking with a polished UI.
+
+---
+
 ## 🎯 Key Goals
 - Fast creation and tracking of support tickets.
 - Crowd-prioritization via upvotes to surface common issues.
